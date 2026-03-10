@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Backend Developer Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Noto+Sans+KR:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0e17;
+      --surface: #111827;
+      --border: #1e2d40;
+      --accent: #00e5ff;
+      --accent2: #39ff6e;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --mono: 'Space Mono', monospace;
+      --sans: 'Noto Sans KR', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      overflow-x: hidden;
+    }
+
+    /* Grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(10,14,23,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    nav .inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 56px;
+    }
+    .hero-inner {
+      padding: 80px 0 60px;
+    }
+    .hero-tag {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.1s;
+    }
+    .hero-tag::before {
+      content: '';
+      width: 32px; height: 1px;
+      background: var(--accent);
+    }
+    .hero-name {
+      font-family: var(--mono);
+      font-size: clamp(36px, 7vw, 72px);
+      font-weight: 700;
+      line-height: 1.05;
+      margin-bottom: 16px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.2s;
+    }
+    .hero-name span {
+      color: var(--accent);
+      position: relative;
+    }
+    .hero-sub {
+      font-size: 18px;
+      color: var(--muted);
+      font-weight: 300;
+      margin-bottom: 32px;
+      line-height: 1.6;
+      max-width: 560px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.35s;
+    }
+    .hero-desc {
+      font-size: 15px;
+      color: #94a3b8;
+      line-height: 1.8;
+      max-width: 540px;
+      margin-bottom: 44px;
+      padding-left: 16px;
+      border-left: 2px solid var(--accent);
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.5s;
+    }
+    .hero-cta {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.65s;
+    }
+    .btn {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      padding: 12px 28px;
+      border-radius: 2px;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #0a0e17;
+      font-weight: 700;
+    }
+    .btn-primary:hover {
+      background: #fff;
+      box-shadow: 0 0 24px rgba(0,229,255,0.4);
+    }
+    .btn-ghost {
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* SECTIONS */
+    section {
+      padding: 96px 0;
+      border-top: 1px solid var(--border);
+    }
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* SKILLS */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+    }
+    .skill-chip {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 14px 16px;
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text);
+      text-align: center;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .skill-chip::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,229,255,0.05), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .skill-chip:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .skill-chip:hover::before { opacity: 1; }
+
+    /* PROJECTS */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 600px) {
+      .projects-grid { grid-template-columns: 1fr; }
+    }
+    .project-card {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 24px;
+      border-radius: 4px;
+      transition: all 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .project-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transition: transform 0.3s;
+    }
+    .project-card:hover {
+      border-color: rgba(0,229,255,0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .project-card:hover::after { transform: scaleX(1); }
+    .project-type {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--accent2);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .project-name {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .project-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* CURRENT WORK */
+    .work-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .work-item {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 20px 24px;
+      border-radius: 4px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      transition: border-color 0.2s;
+    }
+    .work-item:hover { border-color: rgba(0,229,255,0.3); }
+    .work-dot {
+      width: 8px; height: 8px;
+      background: var(--accent2);
+      border-radius: 50%;
+      margin-top: 6px;
+      flex-shrink: 0;
+      box-shadow: 0 0 8px var(--accent2);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .work-text {
+      font-size: 14px;
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+    .work-text strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* CONTACT / FOOTER */
+    .contact-section {
+      padding: 80px 0;
+      text-align: center;
+    }
+    .contact-title {
+      font-family: var(--mono);
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .contact-title span { color: var(--accent); }
+    .contact-sub {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 36px;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 0;
+      text-align: center;
+    }
+    footer p {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="inner">
+    <span class="nav-logo">$ dev --backend</span>
+    <ul class="nav-links">
+      <li><a href="#skills">기술</a></li>
+      <li><a href="#projects">프로젝트</a></li>
+      <li><a href="#current">현재</a></li>
+      <li><a href="#contact">연락</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+  <section class="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <div class="hero-tag">Backend Developer</div>
+        <h1 class="hero-name">이커머스부터<br><span>신재생 에너지</span>까지</h1>
+        <p class="hero-sub">도메인을 가리지 않는 백엔드 개발자입니다.</p>
+        <p class="hero-desc">
+          Node.js를 주력으로 쇼핑몰·재활용 플랫폼·육아 앱 등 다양한 서비스의 API를 설계하고 구축해 왔습니다.<br>
+          현재는 신재생 에너지 회사에서 설비 제어, 데이터 취득, 입찰 서비스 등 산업용 시스템을 개발하고 있습니다.
+        </p>
+        <div class="hero-cta">
+          <a href="#projects" class="btn btn-primary">프로젝트 보기</a>
+          <a href="#contact" class="btn btn-ghost">연락하기</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="container">
+      <div class="section-label reveal">Tech Stack</div>
+      <div class="skills-grid">
+        <div class="skill-chip reveal">Node.js</div>
+        <div class="skill-chip reveal">MySQL</div>
+        <div class="skill-chip reveal">MongoDB</div>
+        <div class="skill-chip reveal">Linux</div>
+        <div class="skill-chip reveal">EMQX</div>
+        <div class="skill-chip reveal">AWS Cloud</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="container">
+      <div class="section-label reveal">Projects</div>
+      <div class="projects-grid">
+        <div class="project-card reveal">
+          <div class="project-type">E-Commerce</div>
+          <div class="project-name">오디오랜드</div>
+          <div class="project-desc">오디오 제품 전문 판매 사이트. 상품 관리 및 주문 처리 API 구현.</div>
+        </div>
+        <div class="project-card reveal">
+          <div class="project-type">Shopping Mall</div>
+          <div class="project-name">카바 라이프</div>
+          <div class="project-desc">종합 쇼핑몰 플랫폼. 결제 연동 및 재고 관리 백엔드 구축.</div>
+        </div>
+        <div class="project-card reveal">
+          <div class="project-type">Event</div>
+          <div class="project-name">티르티르</div>
+          <div class="project-desc">이벤트 관리 서비스. 참여자 관리 및 이벤트 스케줄링 API 설계.</div>
+        </div>
+        <div class="project-card reveal">
+          <div class="project-type">Commerce</div>
+          <div class="project-name">제3기획</div>
+          <div class="project-desc">상품 판매 플랫폼. 클라이언트 맞춤형 API 및 데이터 구조 설계.</div>
+        </div>
+        <div class="project-card reveal">
+          <div class="project-type">Eco / Mobile</div>
+          <div class="project-name">제로 웨이스트</div>
+          <div class="project-desc">재활용 앱 및 웹 서비스. 환경 데이터 처리 및 사용자 서비스 API 구현.</div>
+        </div>
+        <div class="project-card reveal">
+          <div class="project-type">Parenting / App</div>
+          <div class="project-name">브링업</div>
+          <div class="project-desc">육아 정보 앱. 사용자 맞춤 콘텐츠 제공 백엔드 및 푸시 알림 서비스 구현.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="current">
+    <div class="container">
+      <div class="section-label reveal">Current Work</div>
+      <div class="work-list">
+        <div class="work-item reveal">
+          <div class="work-dot"></div>
+          <div class="work-text"><strong>클라이언트 맞춤형 API</strong> — 다양한 요구사항을 분석하여 확장 가능한 RESTful API 설계 및 구현</div>
+        </div>
+        <div class="work-item reveal">
+          <div class="work-dot"></div>
+          <div class="work-text"><strong>신재생 에너지 설비 제어 서비스</strong> — EMQX 기반 MQTT 프로토콜을 활용한 실시간 설비 제어 시스템 개발</div>
+        </div>
+        <div class="work-item reveal">
+          <div class="work-dot"></div>
+          <div class="work-text"><strong>데이터 취득 서비스</strong> — 현장 센서 데이터의 실시간 수집 및 저장 파이프라인 구축</div>
+        </div>
+        <div class="work-item reveal">
+          <div class="work-dot"></div>
+          <div class="work-text"><strong>기상 수집 서비스</strong> — 외부 기상 API 연동 및 주기적 데이터 수집·가공 시스템 개발</div>
+        </div>
+        <div class="work-item reveal">
+          <div class="work-dot"></div>
+          <div class="work-text"><strong>신재생에너지 입찰 서비스</strong> — 전력 거래 입찰 프로세스 자동화 및 서비스 로직 구현</div>
+        </div>
+        <div class="work-item reveal">
+          <div class="work-dot"></div>
+          <div class="work-text"><strong>신재생 유연시장 서비스</strong> — 유연성 자원 거래를 위한 시장 연동 및 데이터 처리 시스템 구축</div>
+        </div>
+        <div class="work-item reveal">
+          <div class="work-dot"></div>
+          <div class="work-text"><strong>단방향 데이터 송수신 서비스</strong> — 폐쇄망 환경에 단방향 장치를 설치하여 신재생 에너지 데이터를 안전하게 수집하고, 제어 데이터를 단방향으로 전송하는 보안 특화 서비스 구축</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact-section">
+    <div class="container">
+      <div class="contact-title reveal">함께 <span>만들어</span> 갑시다</div>
+      <p class="contact-sub reveal">새로운 도메인과 도전을 환영합니다. 언제든지 연락 주세요.</p>
+      <div class="hero-cta" style="justify-content:center;" class="reveal">
+        <a href="/cdn-cgi/l/email-protection#f0" class="btn btn-primary">이메일 보내기</a>
+        <a href="https://github.com/" target="_blank" class="btn btn-ghost">GitHub</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <p>Built with Node.js spirit · Backend Developer Portfolio</p>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+      }
+    })
