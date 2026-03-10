@@ -373,18 +373,17 @@
 
     /* scroll reveal */
     .reveal {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .reveal.visible {
       opacity: 1;
       transform: translateY(0);
+      transition: opacity 0.6s ease, transform 0.6s ease;
     }
-    /* fallback: if JS doesn't run, show everything */
-    .no-js .reveal {
+    .reveal.animate {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    .reveal.animate.visible {
       opacity: 1;
-      transform: none;
+      transform: translateY(0);
     }
   </style>
 </head>
@@ -528,24 +527,24 @@
 </footer>
 
 <script>
-  // Scroll reveal — low threshold so elements near viewport trigger early
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
-      if (entry.isIntersecting) {
-        setTimeout(() => entry.target.classList.add('visible'), i * 60);
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.05 });
+  // Scroll reveal — elements are visible by default, animation is progressive enhancement
+  const revealEls = document.querySelectorAll('.reveal');
 
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  // Only add animation class if IntersectionObserver is supported
+  if ('IntersectionObserver' in window) {
+    revealEls.forEach(el => el.classList.add('animate'));
 
-  // Safety fallback: after 1.5s, force-show anything still hidden
-  setTimeout(() => {
-    document.querySelectorAll('.reveal:not(.visible)').forEach(el => {
-      el.classList.add('visible');
-    });
-  }, 1500);
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 60);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
+
+    revealEls.forEach(el => observer.observe(el));
+  }
 </script>
 </body>
 </html>
